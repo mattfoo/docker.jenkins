@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+    jenkins:
+        build: .
+        image: local/jenkins:latest
+        env_file:
+            - assets/env/admin.env
+            - assets/env/certificate.env
+            - assets/env/email.env
+            - assets/env/ldap.env
+        networks:
+            - jenkins
+        ports:
+            - "443:8443"
+        volumes:
+            - jenkins_home:/var/lib/jenkins
+            - jenkins_storage:/usr/share/jenkins
+        privileged: false
+        restart:    always
+        tty:        true
+
+networks:
+    jenkins:
+        driver: bridge
+        driver_opts:
+            com.docker.network.bridge.name: "jenkins"
+
+volumes:
+    jenkins_home:
+        driver: local
+    jenkins_storage:
+        driver: local
